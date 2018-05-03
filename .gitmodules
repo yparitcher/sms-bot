@@ -1,0 +1,6 @@
+[submodule "parson"]
+	path = parson
+	url = https://github.com/kgabis/parson.git
+[submodule "ini"]
+	path = ini
+	url = https://github.com/rxi/ini.git

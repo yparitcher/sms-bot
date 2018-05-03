@@ -1,0 +1,16 @@
+
+[Unit]
+Description=SMS Bot
+After=network-online.target
+StartLimitAction=reboot
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/smsbot
+Restart=always
+RestartPreventExitStatus=99
+WatchdogSec=30
+DynamicUser=1
+
+[Install]
+WantedBy=multi-user.target

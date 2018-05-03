@@ -1,0 +1,12 @@
+; sample configuration file
+[user]
+; gmail address to use
+email = "example@gmail.com"
+; email and password
+userpasswd = "username:password"
+; domain to reply to with mms for replies longer than 160 char
+mmsdomain = "@example.com"
+
+[services]
+; weather underground key for weather
+wukey = "0000000000000000"

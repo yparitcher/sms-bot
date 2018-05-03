@@ -1,0 +1,4 @@
+smsbot
+*.o
+*.conf
+*.service
