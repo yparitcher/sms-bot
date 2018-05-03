@@ -1,4 +1,6 @@
 ; sample configuration file
+; comment lines are prefixed with a ;
+
 [user]
 ; gmail address to use
 email = "example@gmail.com"

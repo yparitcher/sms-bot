@@ -1,3 +1,7 @@
+/****
+Copyright (c) 2018 Y Paritcher
+****/
+
 #include "config.h"
 #include <string.h>
 #include <ctype.h>

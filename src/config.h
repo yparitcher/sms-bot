@@ -1,3 +1,7 @@
+/****
+Copyright (c) 2018 Y Paritcher
+****/
+
 #ifndef CONFIG_H
 #define CONFIG_H
 

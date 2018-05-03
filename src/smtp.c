@@ -1,10 +1,12 @@
+/****
+Copyright (c) 2018 Y Paritcher
+****/
+
 #include <string.h>
 #include <stdlib.h>
 #include "config.h"
 #include <curl/curl.h>
 #include "smtp.h"
-
-/**************************************************************/
 
 char *lineone;
 char *linetwo;

@@ -1,3 +1,7 @@
+/****
+Copyright (c) 2018 Y Paritcher
+****/
+
 #ifndef WEATHER_H
 #define WEATHER_H
 

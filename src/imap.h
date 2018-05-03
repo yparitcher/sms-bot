@@ -1,3 +1,7 @@
+/****
+Copyright (c) 2018 Y Paritcher
+****/
+
 #ifndef IMAP_H
 #define IMAP_H
 

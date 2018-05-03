@@ -1,3 +1,7 @@
+/****
+Copyright (c) 2018 Y Paritcher
+****/
+
 #include "config.h"
 #include <curl/curl.h>
 #include <stdlib.h>

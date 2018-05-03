@@ -1,3 +1,7 @@
+/****
+Copyright (c) 2018 Y Paritcher
+****/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

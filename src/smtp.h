@@ -1,3 +1,7 @@
+/****
+Copyright (c) 2018 Y Paritcher
+****/
+
 #ifndef SMTP_H
 #define SMTP_H
 
