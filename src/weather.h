@@ -7,6 +7,5 @@ Copyright (c) 2018 Y Paritcher
 
 char *weather(Configargs * conf, char *zip);
 char *forecast(Configargs * conf, char *zips, int cycles);
-char *wiki(char *query);
 
 #endif

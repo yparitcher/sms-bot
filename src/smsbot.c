@@ -6,7 +6,7 @@ Copyright (c) 2018 Y Paritcher
 
 #include "config.h"
 #include "smtp.h"
-#include "modules.h"
+#include "weather.h"
 #include "imap.h"
 #include <stdio.h>
 #include <stdlib.h>

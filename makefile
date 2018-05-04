@@ -6,7 +6,7 @@ INC_DIR = parson ini/src
 
 VPATH = src $(INC_DIR)
 
-objects = smtp.o modules.o parson.o imap.o config.o ini.o
+objects = smtp.o weather.o query.o parson.o imap.o config.o ini.o
 
 .PHONY: clean
 
