@@ -7,6 +7,7 @@ Copyright (c) 2018 Y Paritcher
 
 #include "ini.h"
 
+/* settings structure */
 typedef struct configargs_t{ 
   ini_t *config;
   const char *email;

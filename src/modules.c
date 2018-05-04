@@ -2,6 +2,8 @@
 Copyright (c) 2018 Y Paritcher
 ****/
 
+/* functions to get and parse a response based on the qwery */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,6 +17,7 @@ struct MemoryStruct {
   size_t size;
 };
  
+/* callback to convert curl data to text buffer */
 static size_t
 WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
@@ -35,6 +38,7 @@ WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
     return realsize;
 }
 
+/* fetch the info */
 char *curldo(char *url)
 {
     CURLcode ret;
@@ -50,7 +54,7 @@ char *curldo(char *url)
     hnd = curl_easy_init();
     curl_easy_setopt(hnd, CURLOPT_URL, url);
     curl_easy_setopt(hnd, CURLOPT_USERAGENT, "curl/7.47.0");
-/*  curl_easy_setopt(hnd, CURLOPT_VERBOSE, 1L); */
+	/*curl_easy_setopt(hnd, CURLOPT_VERBOSE, 1L); */
     curl_easy_setopt(hnd, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
     curl_easy_setopt(hnd, CURLOPT_WRITEDATA, (void *)&chunk);
 
@@ -67,8 +71,10 @@ char *curldo(char *url)
     return chunk.memory;
 }
 
+/* weather function */
 char *weather(Configargs * conf, char *zip)
 {
+    /* get the data */
     char *result = NULL;
     char url[78];
     char url_base[] = "http://api.wunderground.com/api/%s/conditions/pws:0/q/%s.json";
@@ -78,6 +84,7 @@ char *weather(Configargs * conf, char *zip)
 
     char *buffer = curldo(url);
 
+    /* parse it */
     JSON_Value *root_value;
     JSON_Object *root_object;
 
@@ -107,8 +114,10 @@ char *weather(Configargs * conf, char *zip)
     return result;
 }
 
+/* forecast function */
 char *forecast(Configargs * conf, char *zip, int cycles)
 {
+    /* get the data */
     char *result = NULL;
     char url[81];
     char *url_base = "http://api.wunderground.com/api/%s/forecast10day/pws:0/q/%s.json";
@@ -117,6 +126,7 @@ char *forecast(Configargs * conf, char *zip, int cycles)
 
     char *buffer = curldo(url);
 
+    /* parse it */
     JSON_Value *root_value;
     JSON_Object *root_object;
     JSON_Array *fctdays;
@@ -147,7 +157,7 @@ char *forecast(Configargs * conf, char *zip, int cycles)
     return result;    
 }
 
-
+/* wikipedia function (coming soon)*/
 /*char *wiki(char *query)
 {
     char *url = "https://en.wikipedia.org/api/rest_v1/page/summary/";

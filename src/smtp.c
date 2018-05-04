@@ -2,6 +2,8 @@
 Copyright (c) 2018 Y Paritcher
 ****/
 
+/* functions for sending response */
+
 #include <string.h>
 #include <stdlib.h>
 #include "config.h"
@@ -14,12 +16,13 @@ char *linethree = "\r\n";
 char *linefour;
 char *linefive = NULL;
 char *payload_text[5];
-char *long_reciever;
+char *mmsrcpt;
  
 struct upload_status {
   int lines_read;
 };
- 
+
+/* callback function to convert text buffer to curl data */ 
 static size_t payload_source(void *ptr, size_t size, size_t nmemb, void *userp)
 {
   struct upload_status *upload_ctx = (struct upload_status *)userp;
@@ -42,17 +45,19 @@ static size_t payload_source(void *ptr, size_t size, size_t nmemb, void *userp)
   return 0;
 }
 
+/* send the response via SMTP */
 int smtp(Smtp_args *args)
 {
 
+  /* set curl options */
   CURLcode ret;
   CURL *hnd;
-  struct curl_slist *slist1;
+  struct curl_slist *mailrcpt;
   struct upload_status upload_ctx;
  
   upload_ctx.lines_read = 0;
 
-  slist1 = NULL;
+  mailrcpt = NULL;
 
   curl_global_init(CURL_GLOBAL_ALL);
   hnd = curl_easy_init();
@@ -60,21 +65,23 @@ int smtp(Smtp_args *args)
   curl_easy_setopt(hnd, CURLOPT_UPLOAD, 1L);
   curl_easy_setopt(hnd, CURLOPT_USERPWD, args->conf->usrpwd);
   curl_easy_setopt(hnd, CURLOPT_USERAGENT, "curl/7.35.0");
-/*  curl_easy_setopt(hnd, CURLOPT_VERBOSE, 1L); */
+  /*curl_easy_setopt(hnd, CURLOPT_VERBOSE, 1L); */
   curl_easy_setopt(hnd, CURLOPT_USE_SSL, (long)CURLUSESSL_ALL);
   curl_easy_setopt(hnd, CURLOPT_MAIL_FROM, args->conf->email);
   curl_easy_setopt(hnd, CURLOPT_READFUNCTION, payload_source);
   curl_easy_setopt(hnd, CURLOPT_READDATA, &upload_ctx);
 
+  /* setup the response data with our info */
   linetwo = malloc(15+args->conf->emaillen);
   snprintf(linetwo, 15+args->conf->emaillen, "From: <%s> Bot\r\n", args->conf->email);
   payload_text[1] = linetwo;
   payload_text[2] = linethree;
   payload_text[4] = linefive;
 
+  /* check if response fits into a text (160 char) or else send via mms */
   if ((int)strlen(args->body) <= 157){
-    slist1 = curl_slist_append(slist1, args->reciever);
-    curl_easy_setopt(hnd, CURLOPT_MAIL_RCPT, slist1);
+    mailrcpt = curl_slist_append(mailrcpt, args->reciever);
+    curl_easy_setopt(hnd, CURLOPT_MAIL_RCPT, mailrcpt);
     lineone = malloc(9+strlen(args->reciever));
     snprintf(lineone, 9+strlen(args->reciever), "To: <%s>\r\n", args->reciever);
     payload_text[0] = lineone;
@@ -82,45 +89,44 @@ int smtp(Smtp_args *args)
     snprintf(linefour, 3+strlen(args->body), "%s\r\n", args->body);
     payload_text[3] = linefour;
 
-/*    printf("%s%s%s%s%s\n", lineone, linetwo, linethree,linefour, linefive);*/
     ret = curl_easy_perform(hnd);
 
   } else {
-    long_reciever = calloc(1+args->conf->mmslen+strcspn(args->reciever, "@"), sizeof(char));
-    strncpy(long_reciever, args->reciever, strcspn(args->reciever, "@"));
-    strncat(long_reciever, args->conf->mms, 1+args->conf->mmslen);
-    slist1 = curl_slist_append(slist1, long_reciever);
-    curl_easy_setopt(hnd, CURLOPT_MAIL_RCPT, slist1);
-    lineone = malloc(9+strlen(long_reciever));
-    snprintf(lineone, 9+strlen(long_reciever), "To: <%s>\r\n", long_reciever);
+    mmsrcpt = calloc(1+args->conf->mmslen+strcspn(args->reciever, "@"), sizeof(char));
+    strncpy(mmsrcpt, args->reciever, strcspn(args->reciever, "@"));
+    strncat(mmsrcpt, args->conf->mms, 1+args->conf->mmslen);
+    mailrcpt = curl_slist_append(mailrcpt, mmsrcpt);
+    curl_easy_setopt(hnd, CURLOPT_MAIL_RCPT, mailrcpt);
+    lineone = malloc(9+strlen(mmsrcpt));
+    snprintf(lineone, 9+strlen(mmsrcpt), "To: <%s>\r\n", mmsrcpt);
     payload_text[0] = lineone;
 
+    /* give option for multiple mms if longer than 2000 chars */
     if ((int)strlen(args->body) <= 2000){
         linefour = malloc(3+strlen(args->body));
         snprintf(linefour, 3+strlen(args->body), "%s\r\n", args->body);
         payload_text[3] = linefour;
 
-/*        printf("%s%s%s%s%s\n", lineone, linetwo, linethree,linefour, linefive);*/
         ret = curl_easy_perform(hnd);
     } else {
         linefour = malloc(3+strlen(args->body));
         snprintf(linefour, 3+strlen(args->body), "%s\r\n", args->body);
         payload_text[3] = linefour;
 
-/*        printf("%s%s%s%s%s\n", lineone, linetwo, linethree,linefour, linefive);*/
         ret = curl_easy_perform(hnd);
     }
   }
 
+  /* cleanup */
   free(linetwo);
   free(linefour);
   curl_easy_cleanup(hnd);
   hnd = NULL;
-  curl_slist_free_all(slist1);
-  slist1 = NULL;
+  curl_slist_free_all(mailrcpt);
+  mailrcpt = NULL;
   curl_global_cleanup();
   free(lineone);
-  free(long_reciever);
+  free(mmsrcpt);
   free(args->body);
 
   return (int)ret;

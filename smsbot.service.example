@@ -1,15 +1,21 @@
+;sample service file
 
 [Unit]
 Description=SMS Bot
+;wait until there is internet to start
 After=network-online.target
+;what to do if smsbot hangs too often
 StartLimitAction=reboot
 
 [Service]
 Type=notify
 ExecStart=/usr/bin/smsbot
+;restart on failure
 Restart=always
 RestartPreventExitStatus=99
+;make sure smsbot constantly lets systemd know it is alive
 WatchdogSec=30
+;run as own service user instead of root
 DynamicUser=1
 
 [Install]

@@ -20,13 +20,13 @@ sms-bot requires:
 - make a [Gmail](https://www.google.com/gmail) account (preferable to use a dedicated one so as not to interfere with regular emails).
 - turn on support for [less secure apps](https://myaccount.google.com/lesssecureapps).
 - sign up for [Weather underground api](https://www.wunderground.com/weather/api/) and get your api key.
-- edit the systemd service file to your liking see `smsbot.service.example`.
+- edit the systemd service file to your liking see [`smsbot.service.example`](smsbot.service.example).
 - edit the .conf file by adding your:
     - email
     - user:password
     - prefered mms response suffix (for messages over 160 characters)
     - weather underground key
-see `smsbot.conf.example`.
+see [`smsbot.conf.example`](smsbot.conf.example).
 
 ## Installation
 - run `git clone https://github.com/yparitcher/sms-bot`.
