@@ -47,7 +47,7 @@ Configargs * config()
 }
 
 /* cleanup */
-void config_free(Configargs * conf)
+void config_free(Configargs * freeconf)
 {
-	ini_free(conf->config);
+	ini_free(freeconf->config);
 }

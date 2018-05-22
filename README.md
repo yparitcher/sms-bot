@@ -2,7 +2,6 @@
 sms-bot is a modular sms query bot for responding to sms commands via email.
 
 This is a work in progress so there will be updates and changes coming.
-Source code documentation coming soon.
 
 ## About
 sms-bot uses a Gmail account to listen for texts and respond based on the query.

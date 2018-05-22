@@ -113,8 +113,8 @@ int main()
         }
         /* cleanup */
         imap_cleanup();
-        config_free(conf);
     }
+    config_free(conf);
     ret = 0;
     return ret;
 }
